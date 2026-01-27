@@ -123,6 +123,88 @@
     }
   }
 
+  // ===========================================
+  // Popup Définitions
+  // ===========================================
+
+  const popupOverlay = document.querySelector('.popup-overlay');
+  const popupContainer = document.querySelector('.popup-container');
+  const popupClose = document.querySelector('.popup-close');
+  const popupDefItems = document.querySelectorAll('.popup-def-item');
+  const defTriggers = document.querySelectorAll('[data-pop-def]');
+
+  // Calculer la largeur de la scrollbar
+  function getScrollbarWidth() {
+    return window.innerWidth - document.documentElement.clientWidth;
+  }
+
+  // Ouvrir le popup avec la bonne définition
+  function openPopup(defId) {
+    // Cacher toutes les définitions
+    popupDefItems.forEach(item => item.classList.remove('active'));
+
+    // Afficher la définition demandée
+    const targetDef = document.querySelector(`.popup-def-item[data-def-id="${defId}"]`);
+    if (targetDef) {
+      targetDef.classList.add('active');
+    }
+
+
+    // Afficher le popup
+    popupOverlay.classList.add('active');
+    popupContainer.classList.add('active');
+
+    // Empêcher le scroll du body
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Fermer le popup
+  function closePopup() {
+    popupOverlay.classList.remove('active');
+    popupContainer.classList.remove('active');
+
+    // Réactiver le scroll
+    document.body.style.overflow = '';
+  }
+
+  // Initialiser les événements du popup
+  function initPopup() {
+    if (!popupOverlay || !popupContainer) return;
+
+    // Clic sur les triggers
+    defTriggers.forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const defId = trigger.dataset.popDef;
+        openPopup(defId);
+      });
+    });
+
+    // Clic sur l'overlay pour fermer
+    popupOverlay.addEventListener('click', closePopup);
+
+    // Clic sur le bouton X pour fermer
+    if (popupClose) {
+      popupClose.addEventListener('click', closePopup);
+    }
+
+    // Touche Escape pour fermer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popupContainer.classList.contains('active')) {
+        closePopup();
+      }
+    });
+
+    // Empêcher la propagation du clic dans le popup
+    popupContainer.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  // ===========================================
+  // Initialisation
+  // ===========================================
+
   // Initialisation
   function init() {
     createProgressDots();
@@ -130,6 +212,7 @@
     initFirstImage();
     initScrollama();
     updateProgressDots(0);
+    initPopup();
   }
 
   // Lancer quand le DOM est prêt
