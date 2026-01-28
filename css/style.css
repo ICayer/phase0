@@ -230,8 +230,8 @@ a:hover {
 
 .thanks-section .thanks-image {
   flex-shrink: 0;
-  width: 300px;
-  height: 200px;
+  width: 340px;
+  height: 500px;
   object-fit: cover;
   border-radius: 4px;
 }
