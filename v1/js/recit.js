@@ -1,26 +1,96 @@
 /**
  * Phase 0 - Récit Scrollytelling
  * Utilise Scrollama.js pour le scroll-driven storytelling
+ *
+ * Approche: Crée un layer par combinaison image+classe unique,
+ * puis fade in/out les layers au scroll.
  */
 
 (function() {
   'use strict';
 
   // Éléments du DOM
-  const bgBack = document.querySelector('.bg-back');
-  const bgFront = document.querySelector('.bg-front');
+  const bgContainer = document.querySelector('.recit-bg-container');
   const steps = document.querySelectorAll('.step');
   const progressDots = document.querySelector('.progress-dots');
 
   // État
   let currentStep = 0;
-  let isFrontActive = false;
-  let layerClasses = { back: null, front: null };
-  let currentImageUrl = null;
+  let currentLayer = null;
 
-  // Récupérer les images depuis les data attributes des steps
+  // Map: step index -> layer element
+  const stepToLayer = new Map();
+
+  // Map: "imageUrl|classe" -> layer element (pour réutiliser les layers identiques)
+  const layerCache = new Map();
+
+  // Récupérer les infos depuis les data attributes des steps
   function getStepImage(stepElement) {
     return stepElement.dataset.image || null;
+  }
+
+  function getStepClasse(stepElement) {
+    return stepElement.dataset.classe || '';
+  }
+
+  // Créer une clé unique pour une combinaison image+classe
+  function makeLayerKey(imageUrl, classe) {
+    return `${imageUrl}|${classe}`;
+  }
+
+  // Créer tous les layers au chargement
+  function createAllLayers() {
+    steps.forEach((step, index) => {
+      const imageUrl = getStepImage(step);
+      if (!imageUrl) return;
+
+      const classe = getStepClasse(step);
+      const key = makeLayerKey(imageUrl, classe);
+
+      // Vérifier si ce layer existe déjà
+      if (layerCache.has(key)) {
+        // Réutiliser le layer existant
+        stepToLayer.set(index, layerCache.get(key));
+      } else {
+        // Créer un nouveau layer
+        const layer = document.createElement('div');
+        layer.className = 'recit-bg-layer';
+        if (classe) {
+          layer.classList.add(classe);
+        }
+        layer.style.backgroundImage = `url('${imageUrl}')`;
+
+        bgContainer.appendChild(layer);
+
+        // Stocker dans les maps
+        layerCache.set(key, layer);
+        stepToLayer.set(index, layer);
+      }
+    });
+
+    // Activer le premier layer
+    const firstLayer = stepToLayer.get(0);
+    if (firstLayer) {
+      firstLayer.classList.add('active');
+      currentLayer = firstLayer;
+    }
+  }
+
+  // Changer le layer actif avec fade
+  function switchToLayer(newLayer) {
+    if (newLayer === currentLayer) return;
+
+    // Fade out l'ancien
+    if (currentLayer) {
+      currentLayer.classList.remove('active');
+    }
+
+    // Fade in le nouveau
+    if (newLayer) {
+      newLayer.classList.add('active');
+    }
+
+    currentLayer = newLayer;
   }
 
   // Créer les indicateurs de progression
@@ -40,69 +110,11 @@
 
   // Mettre à jour l'indicateur actif
   function updateProgressDots(index) {
+    if (!progressDots) return;
     const dots = progressDots.querySelectorAll('.progress-dot');
     dots.forEach((dot, i) => {
       dot.classList.toggle('active', i === index);
     });
-  }
-
-  // Changer l'image de fond avec crossfade
-  function changeBackground(imageUrl) {
-    if (!imageUrl) return;
-
-    if (isFrontActive) {
-      // Front est visible, on charge sur back et on fade out front
-      bgBack.style.backgroundImage = `url('${imageUrl}')`;
-      bgFront.classList.remove('active');
-    } else {
-      // Back est visible, on charge sur front et on fade in front
-      bgFront.style.backgroundImage = `url('${imageUrl}')`;
-      bgFront.classList.add('active');
-    }
-
-    isFrontActive = !isFrontActive;
-  }
-
-  // Mettre à jour la classe custom sur le layer actif (depuis data-classe)
-  // imageChanged: true si crossfade en cours, false si même image
-  function updateCustomClass(newClass, imageChanged) {
-    const activeKey = isFrontActive ? 'front' : 'back';
-    const activeLayer = isFrontActive ? bgFront : bgBack;
-
-    if (imageChanged) {
-      // Crossfade en cours: gérer les deux layers
-      const oldKey = isFrontActive ? 'back' : 'front';
-      const oldLayer = isFrontActive ? bgBack : bgFront;
-
-      // Retirer l'ancienne classe du layer actif (il pourrait en avoir une de 2 steps avant)
-      if (layerClasses[activeKey]) {
-        activeLayer.classList.remove(layerClasses[activeKey]);
-      }
-
-      // Ajouter la nouvelle classe au layer actif
-      if (newClass) {
-        activeLayer.classList.add(newClass);
-      }
-      layerClasses[activeKey] = newClass || null;
-
-      // Nettoyer l'ancien layer APRÈS la fin du fade (850ms > 800ms transition)
-      if (layerClasses[oldKey]) {
-        const classToRemove = layerClasses[oldKey];
-        setTimeout(() => {
-          oldLayer.classList.remove(classToRemove);
-        }, 850);
-        layerClasses[oldKey] = null;
-      }
-    } else {
-      // Même image: juste mettre à jour la classe sur le layer actuel (transition CSS)
-      if (layerClasses[activeKey]) {
-        activeLayer.classList.remove(layerClasses[activeKey]);
-      }
-      if (newClass) {
-        activeLayer.classList.add(newClass);
-      }
-      layerClasses[activeKey] = newClass || null;
-    }
   }
 
   // Détecter si on est sur mobile
@@ -130,18 +142,11 @@
         // Mettre à jour l'étape courante
         currentStep = index;
 
-        // Changer l'image de fond seulement si différente
-        const imageUrl = getStepImage(element);
-        const imageChanged = imageUrl && imageUrl !== currentImageUrl;
-
-        if (imageChanged) {
-          changeBackground(imageUrl);
-          currentImageUrl = imageUrl;
+        // Changer le layer de fond
+        const layer = stepToLayer.get(index);
+        if (layer) {
+          switchToLayer(layer);
         }
-
-        // Appliquer la classe custom du step (data-classe)
-        const customClass = element.dataset.classe || null;
-        updateCustomClass(customClass, imageChanged);
 
         // Mettre à jour les indicateurs
         updateProgressDots(index);
@@ -158,37 +163,6 @@
     window.addEventListener('resize', scroller.resize);
   }
 
-  // Précharger les images
-  function preloadImages() {
-    const images = [];
-    steps.forEach(step => {
-      const imageUrl = getStepImage(step);
-      if (imageUrl && !images.includes(imageUrl)) {
-        images.push(imageUrl);
-        const img = new Image();
-        img.src = imageUrl;
-      }
-    });
-  }
-
-  // Initialiser la première image
-  function initFirstImage() {
-    const firstStep = steps[0];
-    if (firstStep) {
-      const imageUrl = getStepImage(firstStep);
-      if (imageUrl) {
-        bgBack.style.backgroundImage = `url('${imageUrl}')`;
-        currentImageUrl = imageUrl;
-      }
-      // Appliquer la classe custom du premier step si présente
-      const customClass = firstStep.dataset.classe || null;
-      if (customClass) {
-        bgBack.classList.add(customClass);
-        layerClasses.back = customClass;
-      }
-    }
-  }
-
   // ===========================================
   // Popup Définitions
   // ===========================================
@@ -198,11 +172,6 @@
   const popupClose = document.querySelector('.popup-close');
   const popupDefItems = document.querySelectorAll('.popup-def-item');
   const defTriggers = document.querySelectorAll('[data-pop-def]');
-
-  // Calculer la largeur de la scrollbar
-  function getScrollbarWidth() {
-    return window.innerWidth - document.documentElement.clientWidth;
-  }
 
   // Ouvrir le popup avec la bonne définition
   function openPopup(defId) {
@@ -214,7 +183,6 @@
     if (targetDef) {
       targetDef.classList.add('active');
     }
-
 
     // Afficher le popup
     popupOverlay.classList.add('active');
@@ -271,11 +239,9 @@
   // Initialisation
   // ===========================================
 
-  // Initialisation
   function init() {
+    createAllLayers();
     createProgressDots();
-    preloadImages();
-    initFirstImage();
     initScrollama();
     updateProgressDots(0);
     initPopup();

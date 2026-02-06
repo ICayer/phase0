@@ -414,29 +414,31 @@ a:hover {
   opacity: 0;
 }
 
-/* Double background pour crossfade */
-.recit-bg-layer {
+/* Container pour les background layers */
+.recit-bg-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.recit-bg-layer.bg-back {
   z-index: 0;
 }
 
-.recit-bg-layer.bg-front {
-  z-index: 1;
+/* Background layers (générés dynamiquement) */
+.recit-bg-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   opacity: 0;
+  transition: opacity 0.8s ease;
 }
 
-.recit-bg-layer.bg-front.active {
+.recit-bg-layer.active {
   opacity: 1;
 }
 
@@ -1015,6 +1017,9 @@ a:hover {
   /* Pour les mobiles et certaines images plus portrait, on peut augmenter sensiblement la taille et ajuster l'image pour remplir l'espace */
   .recit-bg-layer.portrait1 {
     transform: scale(2.5) translate(17%, 30%);
+  }
+  .recit-bg-layer.portrait2 {
+    transform: scale(2.0) translate(17%, 30%);
   }
 
   /* Masquer les progress dots */
