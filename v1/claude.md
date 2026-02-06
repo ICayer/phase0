@@ -66,11 +66,35 @@ Code d'embed (voir `embed-fonts.txt`):
 
 ## Spécifications techniques
 
-### Dimensions
+### Dimensions et Responsive
 
 - **Optimisé pour:** 1920px de largeur
-- **Largeur minimale tolérée:** ~1400px
-- **Responsive:** Non - le container principal a une largeur minimale fixe
+- **Responsive:** Oui, avec 3 breakpoints
+
+| Breakpoint | Largeur | Description |
+|------------|---------|-------------|
+| Desktop | ≥ 1200px | Comportement original |
+| Tablette | 768px - 1199px | Tailles réduites, layouts conservés |
+| Mobile | < 768px | Layouts empilés, ajustements majeurs |
+
+#### Changements Tablette (768-1199px)
+- Padding container: 30px
+- Typographie légèrement réduite
+- Step-content: max-width 480px, marges réduites
+
+#### Changements Mobile (< 768px)
+- Padding container: 20px
+- `.teams`: empilé verticalement
+- `.entry-buttons`: boutons pleine largeur empilés
+- `.thanks-section`: image au-dessus du texte
+- Footer: crédits en colonne
+- Progress dots: masqués
+- Popup: largeur 95%
+
+#### Page Récit - Mobile
+- **Images de fond**: `background-size: contain`, `background-position: 0 0`, `transform: scale(1.5) translate(10%, 20%)`
+- **Espace entre steps**: `padding-bottom: 100vh` pour voir les images entre les boîtes
+- **Scrollama offset**: 0.85 (vs 0.5 desktop) pour changer l'image plus tôt
 
 ---
 
@@ -276,3 +300,4 @@ Liste des images utilisées (nommées selon les steps S1, S2, etc.):
 - Les titres sont automatiquement en UPPERCASE via CSS
 - Le footer utilise une couleur personnalisée `#124978` (pas une variable)
 - Les images du récit doivent être > 1920×1080px pour les écrans retina
+- **Responsive**: Media queries ajoutées à la fin de `style.css`, offset Scrollama dynamique dans `recit.js`
