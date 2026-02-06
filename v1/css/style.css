@@ -424,7 +424,7 @@ a:hover {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .recit-bg-layer.bg-back {
@@ -1011,6 +1011,10 @@ a:hover {
     background-color: transparent;
     background-position: 0 0;
     transform: scale(1.5) translate(10%, 20%);
+  }
+  /* Pour les mobiles et certaines images plus portrait, on peut augmenter sensiblement la taille et ajuster l'image pour remplir l'espace */
+  .recit-bg-layer.portrait1 {
+    transform: scale(2.5) translate(17%, 30%);
   }
 
   /* Masquer les progress dots */

@@ -15,6 +15,8 @@
   // État
   let currentStep = 0;
   let isFrontActive = false;
+  let layerClasses = { back: null, front: null };
+  let currentImageUrl = null;
 
   // Récupérer les images depuis les data attributes des steps
   function getStepImage(stepElement) {
@@ -61,6 +63,48 @@
     isFrontActive = !isFrontActive;
   }
 
+  // Mettre à jour la classe custom sur le layer actif (depuis data-classe)
+  // imageChanged: true si crossfade en cours, false si même image
+  function updateCustomClass(newClass, imageChanged) {
+    const activeKey = isFrontActive ? 'front' : 'back';
+    const activeLayer = isFrontActive ? bgFront : bgBack;
+
+    if (imageChanged) {
+      // Crossfade en cours: gérer les deux layers
+      const oldKey = isFrontActive ? 'back' : 'front';
+      const oldLayer = isFrontActive ? bgBack : bgFront;
+
+      // Retirer l'ancienne classe du layer actif (il pourrait en avoir une de 2 steps avant)
+      if (layerClasses[activeKey]) {
+        activeLayer.classList.remove(layerClasses[activeKey]);
+      }
+
+      // Ajouter la nouvelle classe au layer actif
+      if (newClass) {
+        activeLayer.classList.add(newClass);
+      }
+      layerClasses[activeKey] = newClass || null;
+
+      // Nettoyer l'ancien layer APRÈS la fin du fade (850ms > 800ms transition)
+      if (layerClasses[oldKey]) {
+        const classToRemove = layerClasses[oldKey];
+        setTimeout(() => {
+          oldLayer.classList.remove(classToRemove);
+        }, 850);
+        layerClasses[oldKey] = null;
+      }
+    } else {
+      // Même image: juste mettre à jour la classe sur le layer actuel (transition CSS)
+      if (layerClasses[activeKey]) {
+        activeLayer.classList.remove(layerClasses[activeKey]);
+      }
+      if (newClass) {
+        activeLayer.classList.add(newClass);
+      }
+      layerClasses[activeKey] = newClass || null;
+    }
+  }
+
   // Détecter si on est sur mobile
   function isMobile() {
     return window.innerWidth < 768;
@@ -86,11 +130,18 @@
         // Mettre à jour l'étape courante
         currentStep = index;
 
-        // Changer l'image de fond
+        // Changer l'image de fond seulement si différente
         const imageUrl = getStepImage(element);
-        if (imageUrl) {
+        const imageChanged = imageUrl && imageUrl !== currentImageUrl;
+
+        if (imageChanged) {
           changeBackground(imageUrl);
+          currentImageUrl = imageUrl;
         }
+
+        // Appliquer la classe custom du step (data-classe)
+        const customClass = element.dataset.classe || null;
+        updateCustomClass(customClass, imageChanged);
 
         // Mettre à jour les indicateurs
         updateProgressDots(index);
@@ -127,6 +178,13 @@
       const imageUrl = getStepImage(firstStep);
       if (imageUrl) {
         bgBack.style.backgroundImage = `url('${imageUrl}')`;
+        currentImageUrl = imageUrl;
+      }
+      // Appliquer la classe custom du premier step si présente
+      const customClass = firstStep.dataset.classe || null;
+      if (customClass) {
+        bgBack.classList.add(customClass);
+        layerClasses.back = customClass;
       }
     }
   }
