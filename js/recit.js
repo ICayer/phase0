@@ -61,14 +61,22 @@
     isFrontActive = !isFrontActive;
   }
 
+  // Détecter si on est sur mobile
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
   // Initialiser Scrollama
   function initScrollama() {
     const scroller = scrollama();
 
+    // Offset plus élevé sur mobile pour changer l'image plus tôt
+    const scrollOffset = isMobile() ? 0.85 : 0.5;
+
     scroller
       .setup({
         step: '.step',
-        offset: 0.5, // Trigger quand le step atteint le milieu de l'écran
+        offset: scrollOffset,
         progress: false,
         debug: false
       })

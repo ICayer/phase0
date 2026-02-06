@@ -733,3 +733,370 @@ a:hover {
 .popup-def-item.active {
   display: block;
 }
+
+/* ===========================================
+   RESPONSIVE - Tablette (768px - 1199px)
+   =========================================== */
+
+@media screen and (max-width: 1199px) {
+  /* Variables ajustées */
+  :root {
+    --container-padding: 30px;
+  }
+
+  /* Typographie réduite */
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Page d'accueil */
+  .home-header h1 {
+    font-size: 4rem;
+  }
+
+  .home-header .subtitle {
+    font-size: 1.5rem;
+  }
+
+  .home-header .teams {
+    gap: 2rem;
+    font-size: 1rem;
+  }
+
+  .context-section p {
+    font-size: 1.2rem;
+  }
+
+  .entry-buttons {
+    gap: 1.5rem;
+    padding: 40px 0;
+  }
+
+  .entry-btn {
+    padding: 15px 40px;
+    font-size: 1.3rem;
+  }
+
+  .thanks-section {
+    gap: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .thanks-section .thanks-image {
+    width: 280px;
+    height: 400px;
+  }
+
+  /* Footer */
+  .footer-credits {
+    gap: 3rem;
+  }
+
+  /* Page récit */
+  .step {
+    padding: 20vh 40px 20vh 0;
+  }
+
+  .step.position-left {
+    padding-left: 40px;
+  }
+
+  .step-content {
+    max-width: 480px;
+    padding: 25px 30px;
+    margin-right: 60px;
+  }
+
+  .step.position-left .step-content {
+    margin-left: 60px;
+  }
+
+  .step-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .step-content p,
+  .step-content ul {
+    font-size: 1.15rem;
+  }
+
+  /* Popup */
+  .popup-content {
+    padding: 35px 40px 40px;
+  }
+
+  .popup-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .popup-content .popup-definition {
+    font-size: 1rem;
+  }
+}
+
+/* ===========================================
+   RESPONSIVE - Mobile (< 768px)
+   =========================================== */
+
+@media screen and (max-width: 767px) {
+  /* Variables ajustées */
+  :root {
+    --container-padding: 20px;
+  }
+
+  /* Typographie mobile */
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Navigation sticky */
+  .nav-sticky {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+
+  .nav-sticky.nav-left {
+    left: 15px;
+    top: 15px;
+  }
+
+  .nav-sticky.nav-right {
+    left: 15px;
+    bottom: 15px;
+  }
+
+  /* Page d'accueil */
+  .home-header {
+    padding: 60px 0 30px;
+  }
+
+  .home-header h1 {
+    font-size: 2.8rem;
+  }
+
+  .home-header .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .home-header .teams {
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .context-section {
+    padding: 30px 0;
+  }
+
+  .context-section p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  /* Boutons d'entrée empilés */
+  .entry-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 40px 20px;
+  }
+
+  .entry-btn {
+    width: 100%;
+    padding: 18px 30px;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  /* Section remerciements */
+  .thanks-section {
+    flex-direction: column;
+    padding: 40px 0;
+    font-size: 1.1rem;
+  }
+
+  .thanks-section .thanks-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 340 / 500;
+    margin: 0 auto;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: 40px 0 30px;
+    margin-top: 40px;
+  }
+
+  .footer-credits {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .footer-section {
+    padding: 1.5rem 0;
+  }
+
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+
+  .footer-logos {
+    gap: 1.5rem;
+  }
+
+  .footer-logos img {
+    height: 45px;
+  }
+
+  .footer-logos.large img {
+    height: 60px;
+  }
+
+  /* Page Glossaire */
+  .page-header {
+    padding: 80px 0 40px;
+  }
+
+  .glossary-list {
+    padding: 0 var(--container-padding) 60px;
+  }
+
+  .glossary-item {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .glossary-item h2 {
+    font-size: 1.4rem;
+  }
+
+  .glossary-item .definition {
+    font-size: 1rem;
+  }
+
+  .glossary-item .bibliography {
+    font-size: 0.9rem;
+  }
+
+  /* Page Théorie */
+  .theory-placeholder h1 {
+    font-size: 3.5rem;
+  }
+
+  /* Page Récit - Mobile */
+
+  /* Images de fond en contain pour voir l'image entière */
+  .recit-bg-layer {
+    background-size: contain;
+    background-color: transparent;
+  }
+
+  /* Masquer les progress dots */
+  .progress-dots {
+    display: none;
+  }
+
+  /* Steps */
+  .scrolly-steps {
+    padding-top: 50vh;
+  }
+
+  .step {
+    min-height: auto;
+    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .step.position-left,
+  .step.position-center {
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .step.is-last {
+    min-height: 80vh;
+    align-items: center;
+  }
+
+  /* Step content - centré avec marges */
+  .step-content {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 20px 25px;
+  }
+
+  .step.position-left .step-content,
+  .step.position-center .step-content {
+    margin: 0;
+  }
+
+  .step-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .step-content p,
+  .step-content ul {
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .step-content .btn-back {
+    margin-top: 1rem;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Popup - Mobile */
+  .popup-container {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .popup-close {
+    top: 10px;
+    right: 15px;
+    font-size: 2.5rem;
+    padding: 10px;
+  }
+
+  .popup-content {
+    padding: 30px 25px 35px;
+  }
+
+  .popup-content h2 {
+    font-size: 1.3rem;
+    padding-right: 30px;
+  }
+
+  .popup-content .popup-definition {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .popup-content .popup-bibliography {
+    font-size: 0.85rem;
+  }
+}
