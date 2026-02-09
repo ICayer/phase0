@@ -1122,3 +1122,46 @@ a:hover {
     display:none;
   }
 }
+
+/* Aligne le nom et les logos sur la même ligne */
+  .nom-reseaux {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espace entre le nom et les logos */
+  }
+
+  .nom-artiste {
+    margin: 0; /* Enlever les marges par défaut du <p> */
+  }
+
+  .logos {
+    display: flex;
+    gap: 10px; /* Espace entre les deux icônes */
+  }
+
+  /* Style pour rendre les logos gris et petits */
+  .icon-gris {
+    width: 20px;
+    height: 20px;
+    filter: grayscale(100%); /* Rend le logo gris */
+    opacity: 0.6; /* Un peu de transparence pour la sobriété */
+    transition: 0.3s;
+  }
+
+  /* Effet au survol (devient coloré ou plus foncé) */
+  .icon-gris:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+
+  .intro-image {
+  /* Définit la largeur à 50% de la fenêtre d'affichage */
+  width: 50vw; 
+  /* Sécurité pour les petits écrans (mobiles) */
+  max-width: 100%; 
+  /* Conserve les proportions de l'image */
+  height: auto; 
+  /* Optionnel : centre l'image si elle est seule sur sa ligne */
+  display: block;
+  margin: 10px auto; 
+}
